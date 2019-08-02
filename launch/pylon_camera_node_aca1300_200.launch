@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="respawn" default="true" />
+    <arg name="debug" default="false" />
+    <arg name="node_name" default="pylon_camera_node_aca1300" />
+    <arg name="config_file" default="$(find ground_removal_filter)/config/aca1300-200.yaml" />
+
+    <arg unless="$(arg debug)" name="launch_prefix" value="" />
+    <arg     if="$(arg debug)" name="launch_prefix" value="gdb -ex run --args" />
+
+    <node name="$(arg node_name)" pkg="pylon_camera" type="pylon_camera_node" output="screen"
+          respawn="$(arg respawn)" launch-prefix="$(arg launch_prefix)">
+        <rosparam command="load" file="$(arg config_file)" />
+    </node>
+    <!--node pkg="image_transport" type="republish" name="image_transport_republish" args="raw in:=/pylon_camera_node/image_raw out:=/image_raw" if="$(arg republish_compressed)" /-->
+    <!--node pkg="image_transport" type="republish" name="image_transport_republish" args="raw" if="$(arg republish_compressed)" /-->
+</launch>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="respawn" default="false" />
+    <arg name="debug" default="true" />
+    <arg name="node_name" default="ground_removal_filter_node" />
+    <!-- <arg launch-prefix="valgrind tool=callgrind callgrind-out-file=/home/project/test1.log" /> -->
+    
+  
+
+    <node name="$(arg node_name)" pkg="ground_removal_filter" type="ground_removal_filter_node" output="screen"
+          respawn="$(arg respawn)" >
+        <param name="child_frame_id" value="velodyne"/>
+        <param name="frame_id" value="/world"/>
+        <param name="logging_dir" value="/home/ubuntu/logs"/>
+        <param name="point_cloud_topic_name" value="/velodyne_points" />
+        <!-- param name="point_cloud_topic_name" value="/apollo/sensor/velodyne16/PointCloud2"/ -->
+        
+        <param name="object_avoidance_zone" value="20.0"/>
+        <param name="voxel_side_length" value="0.1"/>
+        <param name="voxel_cube_size" value="512"/>
+        <param name="ground_remove_angle" value="40"/>
+        <param name="obstacle_width" value="2"/>
+        <param name="number_of_random_points_in_search_space" value="1000"/>
+        <param name="trajectory_smoother_points" value="0"/> 
+        <param name="reprojected_path_up_to" value="3"/>  
+        <param name="minimum_collision_distance" value="4"/>
+        <param name="minimum_allowable_distance_between_two_poses" value="0.5"/>
+        <!-- <param name="trajectory_to_be_flown_file_name" value="$(find ground_removal_filter)/data/trajectories/square_low_level.csv"/> -->
+        <!-- <param name="trajectory_to_be_flown_file_name" value="$(find ground_removal_filter)/data/trajectories/square.csv"/> -->
+        <param name="trajectory_to_be_flown_file_name" value="$(find ground_removal_filter)/data/trajectories/straight_line_v2.csv"/>
+        <param name="speed_factor" value="1"/>
+        <param name="trajectory_tuning_factor" value="0.5"/>
+        <param name="number_point_clouds_to_be_merged" value="6"/>
+        <param name="number_of_components" value="10"/>
+        <param name="manual_take_off" value="true"/>
+        <param name="fail_safe_counter_max" value="5"/>
+        <param name="fail_safe_goal_pose_min_distance" value="1.0"/>
+    </node>
+
+  
+</launch>

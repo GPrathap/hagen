@@ -1,0 +1,9 @@
+cmake_minimum_required(VERSION 2.8)
+project(ground_removal_filter)
+
+include_directories ( ${src} )
+message( STATUS "Include  libraries into build process:" )
+foreach( DIR lidar_subnode utils projections ground_removal  )
+    message( STATUS "  - " ${DIR} )
+    add_subdirectory( ${DIR} )
+endforeach()

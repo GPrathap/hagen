@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+ <!-- This is a plumber for recording data from drone. It may include camera, lidar utilization etc -->
+
+
+ <!-- Include Basler acA1300-200uc camera nodes -->
+ <include file="$(find ground_removal_filter)/launch/pylon_camera_node_aca1300_200.launch"></include>
+
+ <!-- Run XSens IMU driver -->
+ <!--include file="$(find xsens_driver)/launch/xsens_driver.launch">
+   <arg name="device" value="/dev/ttyUSB0"/>
+ </include--> 
+
+ <!-- Include VLP-16 lidar (in stock)-->
+ <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"></include>
+
+
+  <!---o /mnt/drone_logs/m600-->
+ <!-- PLEASE Provide topic names to record in args below. Separate them by spaces" -->
+ <node pkg="rosbag" type="record" name="rosbag_record_drone" args="/pylon_camera_node_aca1300/image_raw/compressed /velodyne_packets /dji_sdk/acceleration_ground_fused /dji_sdk/angular_velocity_fused /dji_sdk/display_mode /dji_sdk/flight_status /dji_sdk/gimbal_angle /dji_sdk/gps_health /dji_sdk/gps_position /dji_sdk/height_above_takeoff /dji_sdk/imu /dji_sdk/attitude /dji_sdk/local_frame_ref /dji_sdk/local_position /dji_sdk/rtk_info_position /dji_sdk/rtk_info_yaw /dji_sdk/rtk_position /dji_sdk/rtk_velocity /dji_sdk/rtk_yaw /dji_sdk/velocity /imu/data -o /home/ubuntu/sdcard/8800FD1400FD09C81/drone_bag --split --size=4000" respawn="true" />
+
+
+</launch>
