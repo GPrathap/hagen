@@ -2,7 +2,7 @@
 #define GROUND_REMOVAL_UNION_FIND_H_
 
 #include <opencv2/opencv.hpp>
-// #include <opencv2/core.hpp>
+#include <opencv2/core.hpp>
 #include <algorithm>
 #include <iostream>
 #include <map>

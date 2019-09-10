@@ -2,7 +2,7 @@
 #define GROUND_REMOVAL_LOCAL_MAXIMA_FILTER_H_
 
 #include <opencv2/opencv.hpp>
-// #include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <algorithm>
 #include <iostream>
@@ -11,7 +11,7 @@
 #include <tuple>
 #include <set>
 #include "union_find.h"
-// #include <parallel/algorithm>
+#include <parallel/algorithm>
 #include <cnpy.h>
 
 namespace kamaz {
@@ -29,7 +29,8 @@ class LocalMaximaFilter{
     ~LocalMaximaFilter() = default;
 
     float get_pixel_value(Pixel p);
-    void iter_neighbors(Pixel p, std::vector<Pixel> &item_list); 
+    //float get_pixel_value(const cv::cuda::GpuMat& img, std::tuple<int, int, float> p);
+    void iter_neighbors(Pixel p, std::vector<Pixel> &item_list);
     void persistence(const cv::Mat& img, cv::Mat& filtered_image);
     void persistence_and_save_data(const cv::Mat& img, cv::Mat& filtered_image, int index);
 

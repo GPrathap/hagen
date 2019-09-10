@@ -87,10 +87,10 @@ void LidarProcessSubnode::onPointCloud(const sensor_msgs::PointCloud2& cloud) {
     auto tf_k_end = common_utils.get_tf_from_stamped_tf(transformation_buffer[number_point_clouds_to_be_merged-1]);
     tf::Vector3 tf_vec_k_end = tf_k_end.getOrigin();
 
-    for(int k=number_point_clouds_to_be_merged-2; k = 0; k--){
+    for(int k=number_point_clouds_to_be_merged-2; k=0; k--){
       auto tf_k = common_utils.get_tf_from_stamped_tf(transformation_buffer[k]);
       tf::Vector3 tf_vec_k = tf_k.getOrigin();
-      auto diff_vec =  tf_vec_k - tf_vec_k_end;
+      auto diff_vec = tf_vec_k_end - tf_vec_k;
       Eigen::Matrix4f transtation = Eigen::Matrix4f::Identity();
       transtation(0, 3) = diff_vec.getX();
       transtation(1, 3) = diff_vec.getY();
@@ -106,8 +106,6 @@ void LidarProcessSubnode::onPointCloud(const sensor_msgs::PointCloud2& cloud) {
       , *(point_cloud_ground_ptr), transtation);
       pcl::transformPointCloud(*(cloud_buffer[k]->point_cloud_non_ground_plane)
       , *(point_cloud_non_ground_ptr), transtation);
-
-      // pcl::io::savePCDFileASCII ("test_pcd.pcd", cloud);
 
       *(cloud_ptr_current_ptr->point_cloud_ground_plane) += *(point_cloud_ground_ptr);
       *(cloud_ptr_current_ptr->point_cloud_non_ground_plane) += *(point_cloud_non_ground_ptr);

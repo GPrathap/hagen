@@ -149,9 +149,7 @@ namespace hagen {
             std::cout<<" Max_lags should be positive and less than given feature vector" << std::endl;
         }
         auto points =  2*max_lags+1;
-        // std::cout<< c.transpose() << std::endl;
-        Eigen::VectorXf res = c.segment(Nx-1-max_lags, points);
-        return res;
+        return c.segment(Nx-1-max_lags, points);
     }
 
     Eigen::VectorXf SingularSpectrumAnalysis::conv(Eigen::VectorXf f, Eigen::VectorXf g) {
