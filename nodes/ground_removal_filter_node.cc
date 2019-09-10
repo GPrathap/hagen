@@ -6,7 +6,7 @@
 #include <std_msgs/Time.h>
 
 #include "../src/lidar_subnode/lidar_process_subnode.h"
-#include "../src/include/trajectory_estimator_node.h"
+#include "../src/include/ground_removal_filter_node.h"
 #include <iostream>
 #include <string>
 
@@ -29,16 +29,16 @@
 namespace kamaz {
 namespace hagen{
     
-    TrajectoryEstimatorNode::TrajectoryEstimatorNode()
+    GroundRemovalFilterNode::GroundRemovalFilterNode()
         : nh_("~")
     {
     }
 
-    TrajectoryEstimatorNode::~TrajectoryEstimatorNode() {
+    GroundRemovalFilterNode::~GroundRemovalFilterNode() {
 
     };
 
-    void TrajectoryEstimatorNode::init_logging(std::string logging_dir)
+    void GroundRemovalFilterNode::init_logging(std::string logging_dir)
     {
         const std::string COMMON_FMT("[%TimeStamp%][%Severity%]:  %Message%");
         boost::log::register_simple_formatter_factory< boost::log::trivial::severity_level, char >("Severity");
@@ -72,12 +72,11 @@ namespace hagen{
 
     }
 
-    void TrajectoryEstimatorNode::init(){
+    void GroundRemovalFilterNode::init(){
        
         nh_.param("point_cloud_topic_name", hagen.lidar_process_subnode.point_cloud_topic, hagen.lidar_process_subnode.point_cloud_topic);
         nh_.param("frame_id", hagen.lidar_process_subnode.world_frame_id, hagen.lidar_process_subnode.world_frame_id);
         nh_.param("child_frame_id", hagen.lidar_process_subnode.base_frame_id, hagen.lidar_process_subnode.base_frame_id);
-        nh_.param("voxel_side_length", hagen.lidar_process_subnode.voxel_side_length, hagen.lidar_process_subnode.voxel_side_length);
         nh_.param("object_avoidance_zone", hagen.lidar_process_subnode.object_avoidance_zone, hagen.lidar_process_subnode.object_avoidance_zone);
         nh_.param("ground_remove_angle", hagen.lidar_process_subnode.ground_remove_angle, hagen.lidar_process_subnode.ground_remove_angle);
         nh_.param("number_point_clouds_to_be_merged", hagen.lidar_process_subnode.number_point_clouds_to_be_merged, hagen.lidar_process_subnode.number_point_clouds_to_be_merged);

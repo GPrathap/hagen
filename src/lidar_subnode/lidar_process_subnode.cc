@@ -198,7 +198,6 @@ bool LidarProcessSubnode::init() {
   internal_cloud_ptr_ = std::make_shared<boost::circular_buffer<Cloud::Ptr>>(number_point_clouds_to_be_merged);
   internal_tf_transform_frame = std::make_shared<boost::circular_buffer<tf::StampedTransform>>(number_point_clouds_to_be_merged);
   
-  common_utils.voxel_side_length = voxel_side_length;
   common_utils.world_frame_id = world_frame_id;
   inited_ = true;
   return true;

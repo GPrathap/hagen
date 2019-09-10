@@ -52,8 +52,10 @@ endforeach()
 # Add the trajectory estimator library
 set(GROUND_REMOVAL_FILTER_LIB ${GROUND_REMOVAL_FILTER_LIB} 
                       lidar_process_node hagen_utils lidar_projections ground_removal_comp  cnpy z)
-add_executable(${PROJECT_NAME}_node nodes/trajectory_node.cc 
-                                          nodes/trajectory_estimator_node.cc)
+
+add_executable(${PROJECT_NAME}_node nodes/hagen_node.cc 
+                                          nodes/ground_removal_filter_node.cc)
+
 target_compile_features(${PROJECT_NAME}_node PUBLIC cxx_std_11)
 target_link_libraries(${PROJECT_NAME}_node -Wl,--start-group  
                                 ${GROUND_REMOVAL_FILTER_LIB} -Wl,--end-group)

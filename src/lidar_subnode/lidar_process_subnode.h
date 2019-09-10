@@ -39,14 +39,7 @@ class LidarProcessSubnode{
   std::string base_frame_id; // base of the robot for ground plane filtering
 
   float object_avoidance_zone;
-  float voxel_side_length = 0.2f; // 20 cm voxel size
-
- 
-  float obstacle_width = 2;
-
   float ground_remove_angle = 10;
- 
- 
   int number_of_components = 3;
   int number_point_clouds_to_be_merged = 3;
   

@@ -41,10 +41,10 @@
 
 namespace kamaz{
     namespace hagen{
-        class TrajectoryEstimatorNode{
+        class GroundRemovalFilterNode{
         public:
-            TrajectoryEstimatorNode();
-            ~TrajectoryEstimatorNode();
+            GroundRemovalFilterNode();
+            ~GroundRemovalFilterNode();
             
             void init();
             void init_logging(std::string logging_dir);
