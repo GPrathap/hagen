@@ -58,21 +58,21 @@ public:
   template <typename T>
   void execute(T& cloud_ptr_current_ptr, int counter){
         int folder_index = 10;
-        std::string folder = "/dataset/images/result/" ;
-        folder = folder + std::to_string(folder_index) + "/";
+        // std::string folder = "/dataset/images/result/" ;
+        // folder = folder + std::to_string(folder_index) + "/";
         options.ground_remove_angle = ((options.ground_remove_angle/180.0)*M_PI);
         current_cloud_time_stamp = cloud_ptr_current_ptr->time_stamp;
         // previous_cloud_time_stamp += current_cloud_time_stamp;
         RepairDepth(cloud_ptr_current_ptr->projection_ptr()->depth_image()
         , options.step, options.depth_threshold, counter);
-        cv::imwrite(folder + std::to_string(counter) + "_filtered_img.jpg", filtered_map);
-        cv::imwrite(folder + std::to_string(counter) + "_processed.jpg", depth_img_pointer);
-        cv::imwrite(folder + std::to_string(counter) + "_depth_img.jpg", cloud_ptr_current_ptr->projection_ptr()->depth_image());
+        // cv::imwrite(folder + std::to_string(counter) + "_filtered_img.jpg", filtered_map);
+        // cv::imwrite(folder + std::to_string(counter) + "_processed.jpg", depth_img_pointer);
+        // cv::imwrite(folder + std::to_string(counter) + "_depth_img.jpg", cloud_ptr_current_ptr->projection_ptr()->depth_image());
         CreateAngleImage();
         ApplySSASmoothing(options.window_size, options.bin_size, false);
         ZeroOutGroundBFS<T>(options.ground_remove_angle, cloud_ptr_current_ptr
         , options.kernel_size, counter);
-        cv::imwrite(folder + std::to_string(counter) + "_angle_img.jpg", angle_img_pointer);
+        // cv::imwrite(folder + std::to_string(counter) + "_angle_img.jpg", angle_img_pointer);
 
   }
 

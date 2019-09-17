@@ -55,8 +55,8 @@ void DepthGroundRemover::RepairDepth(cv::Mat& inpainted_depth, int step,
 
     filtered_map = cv::Mat::zeros(inpainted_depth.size(), cv::DataType<float>::type);
     LocalMaximaFilter local_maximum_filter;
-    // local_maximum_filter.persistence(inpainted_depth, filtered_map);
-    local_maximum_filter.persistence_and_save_data(inpainted_depth, filtered_map, index_);
+    local_maximum_filter.persistence(inpainted_depth, filtered_map);
+    // local_maximum_filter.persistence_and_save_data(inpainted_depth, filtered_map, index_);
     // int folder_index = 9;
     // std::string folder = "/dataset/images/result/";
     // folder = folder + std::to_string(folder_index) + "/";
