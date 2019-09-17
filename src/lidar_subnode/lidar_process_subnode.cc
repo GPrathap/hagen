@@ -1,3 +1,16 @@
+// Copyright (C) 2019  Geesara Kulathunga, R. Fedorenko, University of Innopolis, Russia
+// This program is free software: you can redistribute it and/or modify it
+// under the terms of the GNU General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+// FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+// more details.
+
+// You should have received a copy of the GNU General Public License along
+// with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "lidar_process_subnode.h"
 
 namespace kamaz {
@@ -146,6 +159,11 @@ void LidarProcessSubnode::onPointCloud(const sensor_msgs::PointCloud2& cloud) {
 }
 
 
+void LidarProcessSubnode::onImage(const sensor_msgs::CompressedImageConstPtr& msg){
+  // cv::Mat image = cv::imdecode(cv::Mat(msg->data),1);
+  // std::string file_name = "/dataset/images/result/10/" + std::to_string(_counter) + "_img_camera.jpg";
+  // cv::imwrite(file_name, image);
+}
 
 void LidarProcessSubnode::separate_ground_and_non_ground(Cloud::Ptr& cloud_ptr_current_ptr
   , pcl::PointCloud<PCLPoint> pc){

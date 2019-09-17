@@ -1,3 +1,17 @@
+// Copyright (C) 2019  Geesara Kulathunga, R. Fedorenko, University of Innopolis, Russia
+// This program is free software: you can redistribute it and/or modify it
+// under the terms of the GNU General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+// FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+// more details.
+
+// You should have received a copy of the GNU General Public License along
+// with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
 #include <sensor_msgs/PointCloud2.h>
@@ -81,6 +95,8 @@ namespace hagen{
         nh_.param("ground_remove_angle", hagen.lidar_process_subnode.ground_remove_angle, hagen.lidar_process_subnode.ground_remove_angle);
         nh_.param("number_point_clouds_to_be_merged", hagen.lidar_process_subnode.number_point_clouds_to_be_merged, hagen.lidar_process_subnode.number_point_clouds_to_be_merged);
         nh_.param("number_of_components", hagen.lidar_process_subnode.number_of_components, hagen.lidar_process_subnode.number_of_components);
+        nh_.param("image_topic_name", hagen.lidar_process_subnode.image_topic_name, hagen.lidar_process_subnode.image_topic_name);
+        
         init_logging(logging_dir);
 
         ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
@@ -90,7 +106,7 @@ namespace hagen{
         hagen.lidar_process_subnode.point_cloud_ground_plane_publisher = node->advertise<sensor_msgs::PointCloud2> ("/hagen/point_cloud_ground_plane", 1);
         hagen.lidar_process_subnode.point_cloud_non_ground_plane_publisher = node->advertise<sensor_msgs::PointCloud2> ("/hagen/point_cloud_non_ground_plane", 1);
         sub_on_point_cloud = node->subscribe(hagen.lidar_process_subnode.point_cloud_topic, 10, &kamaz::hagen::Hagen::onPointCloud, &hagen);
-
+        sub_on_image = node->subscribe(hagen.lidar_process_subnode.image_topic_name, 10, &kamaz::hagen::Hagen::onImage, &hagen);
         hagen.lidar_process_subnode.initInternal();
     }
 

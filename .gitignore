@@ -1,0 +1,39 @@
+/Debug/
+*.pyc
+*genrule.log
+# temporary files
+*.swp
+*.swo
+
+# Eclipse IDE files
+.project
+.cproject
+.settings
+.classpath
+
+# IntelliJ files
+.idea
+
+# Vscode files
+.vscode/*
+
+# atom.io files
+*.gch
+
+# Logs.
+*.stdout
+*.stderr
+nohup.out
+*.bak
+*.csv.result
+
+# Editor configs
+.ycm_extra_conf.py
+
+
+.master_snapshot
+
+ros_pkgs/build
+ros_pkgs/devel
+cmake-build-debug/*
+

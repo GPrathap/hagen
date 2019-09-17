@@ -1,3 +1,17 @@
+// Copyright (C) 2019  Geesara Kulathunga, R. Fedorenko, University of Innopolis, Russia
+// This program is free software: you can redistribute it and/or modify it
+// under the terms of the GNU General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+// FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+// more details.
+
+// You should have received a copy of the GNU General Public License along
+// with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #ifndef LIDAR_SUBNODE_LIDAR_PROCESS_SUBNODE_H_
 #define LIDAR_SUBNODE_LIDAR_PROCESS_SUBNODE_H_
 
@@ -16,6 +30,9 @@
 #include "../utils/radians.h"
 #include "../utils/cloud.h"
 #include "../include/colours.h"
+#include <cv_bridge/cv_bridge.h>
+#include <image_transport/image_transport.h>
+
 
 namespace kamaz {
 namespace hagen {
@@ -28,9 +45,10 @@ class LidarProcessSubnode{
   ~LidarProcessSubnode() = default;
 
   void onPointCloud(const sensor_msgs::PointCloud2& message);
-
+  void onImage(const sensor_msgs::CompressedImageConstPtr& ms);
 
   std::string point_cloud_topic;
+  std::string image_topic_name;
   bool inited_ = false;
   bool initInternal();
 

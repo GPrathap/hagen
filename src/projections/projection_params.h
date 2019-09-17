@@ -1,5 +1,5 @@
+// Copyright (C) 2019  Geesara Kulathunga, R. Fedorenko, University of Innopolis, Russia
 // Copyright (C) 2017  I. Bogoslavskyi, C. Stachniss, University of Bonn
-
 // This program is free software: you can redistribute it and/or modify it
 // under the terms of the GNU General Public License as published by the Free
 // Software Foundation, either version 3 of the License, or (at your option)
