@@ -168,39 +168,36 @@ void LidarProcessSubnode::onImage(const sensor_msgs::CompressedImageConstPtr& ms
 void LidarProcessSubnode::separate_ground_and_non_ground(Cloud::Ptr& cloud_ptr_current_ptr
   , pcl::PointCloud<PCLPoint> pc){
 
-        auto in_cloud = boost::make_shared<pcl::PointCloud<PCLPoint>>(pc);
-        cloud_ptr_current_ptr->point_cloud_ground_plane.reset(new pcl::PointCloud<PCLPoint>());
-        cloud_ptr_current_ptr->point_cloud_non_ground_plane.reset(new pcl::PointCloud<PCLPoint>());
-        cloud_ptr_current_ptr->point_cloud_ptr.reset(new pcl::PointCloud<PCLPoint>());
-        cloud_ptr_current_ptr->point_cloud_ptr = in_cloud;
-        cloud_ptr_current_ptr->time_stamp = ros::Time::now();
+          auto in_cloud = boost::make_shared<pcl::PointCloud<PCLPoint>>(pc);
+          cloud_ptr_current_ptr->point_cloud_ground_plane.reset(new pcl::PointCloud<PCLPoint>());
+          cloud_ptr_current_ptr->point_cloud_non_ground_plane.reset(new pcl::PointCloud<PCLPoint>());
+          cloud_ptr_current_ptr->point_cloud_ptr.reset(new pcl::PointCloud<PCLPoint>());
+          cloud_ptr_current_ptr->point_cloud_ptr = in_cloud;
+          cloud_ptr_current_ptr->time_stamp = ros::Time::now();
 
-        try{
-          cloud_ptr_current_ptr->InitProjection(*proj_params_ptr);
-        }catch (const std::length_error& le) {
-          std::cerr << FBLU("Error:point cloud is empty...") << le.what() << std::endl;;
-          return;
-        }
-        
-        // auto startTime = ros::WallTime::now();
-        BOOST_LOG_TRIVIAL(info) << FCYN("Number of points in the cloud") << cloud_ptr_current_ptr->point_cloud_ptr->points.size();
-        
-        // DepthGroundRemover::HagenFilterOptions<cloud_ptr_current_ptr
-        // , number_of_components, ground_remove_angle, _counter> hagen_filter_options;
+          try{
+            cloud_ptr_current_ptr->InitProjection(*proj_params_ptr);
+          }catch (const std::length_error& le) {
+            std::cerr << FBLU("Error:point cloud is empty...") << le.what() << std::endl;;
+            return;
+          }
+          
+          // auto startTime = ros::WallTime::now();
+          BOOST_LOG_TRIVIAL(info) << FCYN("Number of points in the cloud") << cloud_ptr_current_ptr->point_cloud_ptr->points.size();
+          
+          // DepthGroundRemover::HagenFilterOptions<cloud_ptr_current_ptr
+          // , number_of_components, ground_remove_angle, _counter> hagen_filter_options;
 
-    depth_ground_remover->options.bin_size = number_of_components;
-    depth_ground_remover->options.ground_remove_angle = ground_remove_angle;
-    depth_ground_remover->options.step = 5;
-    depth_ground_remover->options.depth_threshold = 1.0f;
-    depth_ground_remover->options.window_size = smooth_window_size;
-    depth_ground_remover->options.kernel_size = smooth_window_size;
-    depth_ground_remover->options.depth_expiration_time = 1.0;
-    depth_ground_remover->execute<Cloud::Ptr>(cloud_ptr_current_ptr, _counter);
-    _counter++;
+          depth_ground_remover->options.bin_size = number_of_components;
+          depth_ground_remover->options.ground_remove_angle = ground_remove_angle;
+          depth_ground_remover->options.step = 5;
+          depth_ground_remover->options.depth_threshold = 1.0f;
+          depth_ground_remover->options.window_size = smooth_window_size;
+          depth_ground_remover->options.kernel_size = smooth_window_size;
+          depth_ground_remover->options.depth_expiration_time = 1.0;
+          depth_ground_remover->execute<Cloud::Ptr>(cloud_ptr_current_ptr, _counter);
+          _counter++;
   }
-
-
-
 
 
 bool LidarProcessSubnode::init() {

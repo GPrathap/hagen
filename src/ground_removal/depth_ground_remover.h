@@ -16,15 +16,15 @@
 #define GROUND_REMOVAL_DEPTH_GROUND_REMOVER_H_
 
 #include <opencv2/opencv.hpp>
-
+#include <opencv2/highgui/highgui.hpp>
 #include <algorithm>
+
 #include "../projections/projection_params.h"
 #include "../utils/radians.h"
 #include "../utils/cloud.h"
 #include "ssa.h"
-#include "quadtree.h"
-#include <opencv2/highgui/highgui.hpp>
 #include "local_maxima_filter.h"
+#include "../utils/common_utils.h"
 
 namespace kamaz {
 namespace hagen{

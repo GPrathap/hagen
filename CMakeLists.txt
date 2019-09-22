@@ -12,6 +12,7 @@ set(Boost_USE_STATIC_LIBS OFF)
 
 find_package(catkin_simple REQUIRED)
 
+
 set(Boost_NO_SYSTEM_PATHS OFF)
 if (Boost_NO_SYSTEM_PATHS)
   set(BOOST_ROOT /usr/local)

@@ -89,6 +89,35 @@
 
 namespace kamaz {
   namespace hagen{
+
+        struct Point
+        {
+            Point(float x, float y, float angle, float depth)
+            : x(x), y(y), angle(angle), depth(depth)
+            {}
+
+            Point(float x, float y)
+            : x(x), y(y)
+            {}
+
+            Point(){}
+
+            float x;
+            float y;
+            float angle;
+            float depth;
+
+            float operator-(Point a){
+                return (a.x-x) + (a.y-y);
+            }
+
+            Point operator+(Point a){
+                Point b(a.x+x, a.y+y);
+                return b;
+            }    
+        };
+
+
 class CommonUtils {
  public:
   

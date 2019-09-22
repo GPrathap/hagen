@@ -96,6 +96,7 @@ namespace hagen{
         nh_.param("number_point_clouds_to_be_merged", hagen.lidar_process_subnode.number_point_clouds_to_be_merged, hagen.lidar_process_subnode.number_point_clouds_to_be_merged);
         nh_.param("number_of_components", hagen.lidar_process_subnode.number_of_components, hagen.lidar_process_subnode.number_of_components);
         nh_.param("image_topic_name", hagen.lidar_process_subnode.image_topic_name, hagen.lidar_process_subnode.image_topic_name);
+        nh_.param("logging_directory", logging_dir, logging_dir);
         
         init_logging(logging_dir);
 
