@@ -11,5 +11,5 @@ roslaunch ground_removal_filter hagen_node.launch
 roslaunch dji_command coords_bringup.launch
 
 
-# This work is being under reviewed these days. Once it is accepted, details explanation will be provided
+# This work is being reviewed. Once the work is accepted, details explanation will be provided
 
