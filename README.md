@@ -7,6 +7,9 @@
 #### To run the filter 
 roslaunch ground_removal_filter hagen_node.launch
 
-#### To run the bag file and subsecvent nodes
+#### To run the bag file and subsequent nodes
 roslaunch dji_command coords_bringup.launch
+
+
+# This work is being under reviewed these days. Once it is accepted, details explanation will be provided
 
