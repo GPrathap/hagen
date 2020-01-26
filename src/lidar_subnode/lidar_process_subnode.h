@@ -33,6 +33,8 @@
 #include <cv_bridge/cv_bridge.h>
 #include <image_transport/image_transport.h>
 
+#include <fstream>
+
 
 namespace kamaz {
 namespace hagen {
@@ -56,13 +58,14 @@ class LidarProcessSubnode{
   std::string world_frame_id; // the world frame
   std::string base_frame_id; // base of the robot for ground plane filtering
 
-  float object_avoidance_zone;
+  float object_avoidance_zone = 10.0f;
   float ground_remove_angle = 10;
   int number_of_components = 3;
   int number_point_clouds_to_be_merged = 3;
   
   ros::Publisher point_cloud_ground_plane_publisher;
   ros::Publisher point_cloud_non_ground_plane_publisher;
+  ros::Publisher point_cloud_;
 
  private: 
   bool init();
@@ -76,6 +79,7 @@ class LidarProcessSubnode{
   std::shared_ptr< boost::circular_buffer<tf::StampedTransform>> internal_tf_transform_frame;
   int size_of__message_buffer = 2;
 
+  int kernel_size = 7;
   int min_cluster_size = 100;
   int max_cluster_size = 25000;
   int smooth_window_size = 7;
@@ -90,6 +94,8 @@ class LidarProcessSubnode{
   CommonUtils common_utils;
   Eigen::VectorXf map_dimensions;
   Eigen::Vector3f x_init;
+  std::ofstream outfile;
+
 
 };
 }  // namespace hagen

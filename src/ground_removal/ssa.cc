@@ -55,7 +55,7 @@ namespace hagen {
             std::tuple<float, Eigen::VectorXf> vec_and_val(eigen_values[i], eigen_vectors.row(i));
             eigen_vectors_and_values.push_back(vec_and_val);
         }
-        std::sort(eigen_vectors_and_values.begin(), eigen_vectors_and_values.end(), 
+        __gnu_parallel::sort(eigen_vectors_and_values.begin(), eigen_vectors_and_values.end(),
             [&](const std::tuple<float, Eigen::VectorXf>& a, const std::tuple<float, Eigen::VectorXf>& b) -> bool{ 
                 return std::get<0>(a) > std::get<0>(b); 
         });
@@ -103,7 +103,10 @@ namespace hagen {
     }
 
     Eigen::VectorXf SingularSpectrumAnalysis::get_reconstructed_signal(int number_comps){
-        // Eigen::MatrixXf gg = reconstructed_matrix.transpose();
+        Eigen::MatrixXf gg = reconstructed_matrix.transpose();
+        if(number_comps> reconstructed_matrix.cols()){
+            number_comps = reconstructed_matrix.cols();
+        }
         Eigen::VectorXf reconstructed_final_signal
          = reconstructed_matrix.block(0, 0, reconstructed_matrix.rows(), number_comps).rowwise().sum();
         return reconstructed_final_signal;
@@ -163,7 +166,9 @@ namespace hagen {
             std::cout<<" Max_lags should be positive and less than given feature vector" << std::endl;
         }
         auto points =  2*max_lags+1;
-        return c.segment(Nx-1-max_lags, points);
+        // std::cout<< c.transpose() << std::endl;
+        Eigen::VectorXf res = c.segment(Nx-1-max_lags, points);
+        return res;
     }
 
     Eigen::VectorXf SingularSpectrumAnalysis::conv(Eigen::VectorXf f, Eigen::VectorXf g) {

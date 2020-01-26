@@ -39,6 +39,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/eigen.hpp>
 
+#include <parallel/algorithm>
+
 namespace kamaz {
 namespace hagen {
         class SingularSpectrumAnalysis {

@@ -30,7 +30,7 @@ void SphericalProjection::InitFromPoints(kamaz::hagen::PointCloudPtr point_could
   for (int index = 0; index < num_pts; ++index) {
     const auto& point = point_could_ptr->points[index];
     float dist_to_sensor = sqrt(point.x * point.x + point.y * point.y + point.z * point.z);
-    if (dist_to_sensor < 0.01f or dist_to_sensor > this->_params.getMaxDistance()) {
+    if (dist_to_sensor < 0.4f or dist_to_sensor > this->_params.getMaxDistance()) {
       // std::cout<< dist_to_sensor << std::endl; 
       continue;
     }

@@ -69,15 +69,15 @@ public:
         // cv::imwrite(folder + std::to_string(counter) + "_processed.jpg", depth_img_pointer);
         // cv::imwrite(folder + std::to_string(counter) + "_depth_img.jpg", cloud_ptr_current_ptr->projection_ptr()->depth_image());
         CreateAngleImage();
-        ApplySSASmoothing(options.window_size, options.bin_size, false);
-        ZeroOutGroundBFS<T>(options.ground_remove_angle, cloud_ptr_current_ptr
-        , options.kernel_size, counter);
+        // ApplySSASmoothing(options.window_size, options.bin_size, false);
         // cv::imwrite(folder + std::to_string(counter) + "_angle_img.jpg", angle_img_pointer);
-
+        // ApplySSASmoothing(options.window_size, options.bin_size, false);
+        // cv::imwrite(folder + std::to_string(counter) + "_angle_smoothed_img.jpg", angle_img_pointer);
+        ZeroOutGroundBFS<T>(options.ground_remove_angle, cloud_ptr_current_ptr, options.kernel_size);
   }
 
   template <typename T>
-      void ZeroOutGroundBFS(float threshold, T& cloud_ptr_current_ptr, int kernel_size, int counter) {
+      void ZeroOutGroundBFS(float threshold, T& cloud_ptr_current_ptr, int kernel_size) {
 
     cv::Mat _label_image = cv::Mat::zeros(depth_img_pointer.size(), cv::DataType<float>::type);
     std::vector<int> selected_depth_points;
@@ -151,8 +151,8 @@ public:
   int WrapCols(int col, int _label_image_cols);
   ProjectionParams _params;
   float _eps = 0.001f;
-  std::array<Point, 4> adjacent = {Point(-1,0), Point(1,0), Point(0,-1)
-                          , Point(0,1)};
+  std::array<Point, 4> adjacent = {{Point(-1,0), Point(1,0), Point(0,-1)
+                          , Point(0,1)}};
   mutable int _counter = 0;
   cv::Mat depth_img_pointer;
   cv::Mat angle_img_pointer;
@@ -166,6 +166,7 @@ public:
   ros::Time current_cloud_time_stamp;
   float max_time_limit = 1;
   std::deque<DepthCatcher> depth_catcher;
+  std::map<int, int> local_maxima_poses;
 };
 
 

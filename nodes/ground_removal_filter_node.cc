@@ -106,7 +106,7 @@ namespace hagen{
        
         hagen.lidar_process_subnode.point_cloud_ground_plane_publisher = node->advertise<sensor_msgs::PointCloud2> ("/hagen/point_cloud_ground_plane", 1);
         hagen.lidar_process_subnode.point_cloud_non_ground_plane_publisher = node->advertise<sensor_msgs::PointCloud2> ("/hagen/point_cloud_non_ground_plane", 1);
-        sub_on_point_cloud = node->subscribe(hagen.lidar_process_subnode.point_cloud_topic, 10, &kamaz::hagen::Hagen::onPointCloud, &hagen);
+        sub_on_point_cloud = node->subscribe(hagen.lidar_process_subnode.point_cloud_topic, 1, &kamaz::hagen::Hagen::onPointCloud, &hagen);
         sub_on_image = node->subscribe(hagen.lidar_process_subnode.image_topic_name, 10, &kamaz::hagen::Hagen::onImage, &hagen);
         hagen.lidar_process_subnode.initInternal();
     }

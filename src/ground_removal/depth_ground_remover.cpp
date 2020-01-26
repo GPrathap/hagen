@@ -53,34 +53,22 @@ void DepthGroundRemover::RepairDepth(cv::Mat& inpainted_depth, int step,
       }
     }
 
-    filtered_map = cv::Mat::zeros(inpainted_depth.size(), cv::DataType<float>::type);
-    LocalMaximaFilter local_maximum_filter;
-    local_maximum_filter.persistence(inpainted_depth, filtered_map);
-    // local_maximum_filter.persistence_and_save_data(inpainted_depth, filtered_map, index_);
-    // int folder_index = 9;
-    // std::string folder = "/dataset/images/result/";
-    // folder = folder + std::to_string(folder_index) + "/";
-    // cv::imwrite(folder + std::to_string(index_) + "_processed.jpg", inpainted_depth);
-    cv::resize(filtered_map, filtered_map, cv::Size(), 1.0, 1.0);
-    cv::resize(inpainted_depth, inpainted_depth, cv::Size(),1.0, 1.0);
-    cv::Mat prossed_image = (filtered_map + inpainted_depth)/2;
-    depth_img_pointer = prossed_image;
-    // DepthCatcher depth_current = {depth_img_pointer, current_cloud_time_stamp};
-    // while(depth_catcher.size()>0){
-    //   ros::Duration time_diff = current_cloud_time_stamp - depth_catcher.front().time_stamp;
-    //   if(time_diff.toSec() > options.depth_expiration_time){
-    //     depth_catcher.pop_front();
-    //   }else{
-    //     break;
-    //   }
-    // }
-    // if(depth_catcher.size()>0){
-    //   for(auto const depth_catch: depth_catcher){
-    //     depth_img_pointer += depth_catch.depth_map;
-    //   }
-    //   depth_img_pointer = depth_img_pointer/depth_catcher.size();
-    // }
-    // depth_catcher.push_back(depth_current);
+    // filtered_map = cv::Mat::zeros(inpainted_depth.size(), cv::DataType<float>::type);
+    // LocalMaximaFilter local_maximum_filter;
+    // local_maximum_filter.persistence(inpainted_depth, filtered_map, local_maxima_poses);
+
+    // // local_maximum_filter.persistence_and_save_data(inpainted_depth, filtered_map, index_);
+    // // int folder_index = 9;
+    // // std::string folder = "/dataset/images/result/";
+    // // folder = folder + std::to_string(folder_index) + "/";
+    // // cv::imwrite(folder + std::to_string(index_) + "_processed.jpg", inpainted_depth);
+
+    // cv::resize(filtered_map, filtered_map, cv::Size(), 1.0, 1.0);
+    // cv::resize(inpainted_depth, inpainted_depth, cv::Size(),1.0, 1.0);
+    // cv::Mat prossed_image = (filtered_map + inpainted_depth)/2;
+    // depth_img_pointer = prossed_image;
+     depth_img_pointer = inpainted_depth;
+   
 }
 
 void DepthGroundRemover::CreateAngleImage() {
@@ -118,15 +106,28 @@ cv::Mat DepthGroundRemover::GetUniformKernel(int window_size, int type) const {
 
 
 void DepthGroundRemover::ApplySSASmoothing(int window_size, int bin_size, bool is_normalized) {
-  Eigen::MatrixXf smoothed_image(angle_img_pointer.rows, angle_img_pointer.cols);
-  Eigen::Matrix<float,Eigen::Dynamic, Eigen::Dynamic> eigen_img;
-  cv::cv2eigen(angle_img_pointer, eigen_img);
-  for(auto i(0); i< eigen_img.cols(); i++){
-    kamaz::hagen::SingularSpectrumAnalysis ssa(eigen_img.col(i), window_size);
-    smoothed_image.col(i) = ssa.execute(bin_size, is_normalized);
-    // ssa.save_data(i);
-    // std::cout<< f.transpose() << std::endl;
-    // ssa.save_vec(f, "smoothed_signal_"+ std::to_string(i));
+
+  Eigen::MatrixXf smoothed_image =  Eigen::MatrixXf::Zero(angle_img_pointer.rows, angle_img_pointer.cols);
+  Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> eigen_img;
+  float* angle_img_ptr = (float*)angle_img_pointer.data;
+
+
+  for (auto const& x : local_maxima_poses)
+  {
+      Eigen::VectorXf input_signal(angle_img_pointer.rows);
+      float sum = 0;
+      for(int it = 0; it < angle_img_pointer.rows; ++it) {
+          float index_val = angle_img_ptr[it*angle_img_pointer.step1() + x.first];
+          sum += index_val;
+          input_signal[it] = index_val;
+      }
+      if(sum > 0){
+        kamaz::hagen::SingularSpectrumAnalysis ssa(input_signal, window_size);
+        smoothed_image.col(x.first) = ssa.execute(bin_size, is_normalized);
+      }
+      // ssa.save_data(i);
+      // std::cout<< f.transpose() << std::endl;
+      // ssa.save_vec(f, "smoothed_signal_"+ std::to_string(i));
   }
   cv::Mat smoothed_img;
   cv::eigen2cv(smoothed_image, smoothed_img);

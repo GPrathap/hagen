@@ -18,6 +18,7 @@ namespace kamaz {
 namespace hagen{
 
 
+  //https://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d/476311#476311
   void CommonUtils::get_roration_matrix(Eigen::Vector3f a
       , Eigen::Vector3f b, Eigen::Matrix3f& r){
         a = a/a.norm();
@@ -41,7 +42,9 @@ namespace hagen{
         path_position = path_position + start_point;
   }
 
-  void CommonUtils::generate_samples_from_ellipsoid(Eigen::MatrixXf covmat, Eigen::Matrix3f rotation_mat, 
+  // https://geus.wordpress.com/2011/09/15/how-to-represent-a-3d-normal-function-with-ros-rviz/
+  // https://ma.ttpitk.in/blog/?p=368&cpage=1
+  void CommonUtils::generate_samples_from_ellipsoid(Eigen::MatrixXf covmat, Eigen::Matrix3f rotation_mat,
             Eigen::VectorXf cent, Eigen::MatrixXf& container){
 
         int ndims = container.cols();
@@ -109,7 +112,7 @@ namespace hagen{
         marker.scale.x = covmat(0,0)*voxel_side_length;
         marker.scale.y = covmat(1,1)*voxel_side_length;
         marker.scale.z = covmat(2,2)*voxel_side_length;
-        marker.color.a = 0.4;
+        marker.color.a = 0.2;
         marker.color.r = 0.0;
         marker.color.g = 0.0;
         marker.color.b = 0.8;

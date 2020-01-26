@@ -51,7 +51,7 @@ namespace kamaz {
         return;
     } 
 
-    void LocalMaximaFilter::persistence(const cv::Mat& img, cv::Mat& filtered_image){
+    void LocalMaximaFilter::persistence(const cv::Mat& img, cv::Mat& filtered_image, std::map<int, int>& detected_indics){
         
         int h = img.rows;
         int w = img.cols;
@@ -68,21 +68,38 @@ namespace kamaz {
             }
         }
 
+        // std::vector<Pixel> indices;
+        // for(int i=0; i<h; i++){
+        //     for(int j=0; j<w; j++){
+        //         int index_val = w*i + j;
+        //         cv::Scalar intensity = depth_img_row_vector.at(index_val);
+        //         Pixel index_ = {index_val, intensity[0]};
+        //         indices.push_back(index_);
+        //     }
+        // }
+
+        // Get indices orderd by value from high to low
+        // __gnu_parallel::sort(indices.rbegin(), indices.rend(),
+        //  [&](const Pixel a, const Pixel b){
+        //      return a.value < b.value;
+        //  });
+
+        auto cmp = [](Pixel l, Pixel r) { return l.value < r.value;};
+        std::priority_queue<Pixel, std::vector<Pixel>, decltype(cmp)> indices_queue(cmp);
         std::vector<Pixel> indices;
         for(int i=0; i<h; i++){
             for(int j=0; j<w; j++){
+                cv::Scalar intensity = img.at<float>(i, j);
                 int index_val = w*i + j;
-                cv::Scalar intensity = depth_img_row_vector.at(index_val);
                 Pixel index_ = {index_val, intensity[0]};
-                indices.push_back(index_);
+                indices_queue.push(index_);
             }
         }
 
-        // // Get indices orderd by value from high to low
-        __gnu_parallel::sort(indices.rbegin(), indices.rend(),
-         [&](const Pixel a, const Pixel b){
-             return a.value < b.value;
-         });
+        while(!indices_queue.empty()) {
+            indices.push_back(indices_queue.top());
+            indices_queue.pop();
+        }
 
         std::map<int, groups> group0;
         int k = 0;
@@ -105,17 +122,34 @@ namespace kamaz {
                 }
             }
 
+            // int couuu=0;
+            // for(auto ancesttor : ni){
+            //     couuu++;
+            //     std::tuple<float, Pixel> __item(ancesttor.value, ancesttor);
+            //     nc.push_back(__item);
+            // }
+
+            auto cmp_ni = [](std::tuple<float, Pixel> l, std::tuple<float, Pixel> r)
+            { return std::get<0>(l) > std::get<0>(r);};
+
+            std::priority_queue<std::tuple<float, Pixel>
+            , std::vector<std::tuple<float, Pixel>>, decltype(cmp_ni)> ni_queue(cmp_ni);
+
             int couuu=0;
             for(auto ancesttor : ni){
                 couuu++;
                 std::tuple<float, Pixel> __item(ancesttor.value, ancesttor);
-                nc.push_back(__item);
+                ni_queue.push(__item);
+            }
+            while(!ni_queue.empty()) {
+                nc.push_back(ni_queue.top());
+                ni_queue.pop();
             }
 
-            __gnu_parallel::sort(nc.rbegin(), nc.rend(),
-                [](const std::tuple<float, Pixel> a, const std::tuple<float, Pixel> b){
-                    return std::get<0>(a) > std::get<0>(b);
-                });
+            // __gnu_parallel::sort(nc.rbegin(), nc.rend(),
+            //     [](const std::tuple<float, Pixel> a, const std::tuple<float, Pixel> b){
+            //         return std::get<0>(a) > std::get<0>(b);
+            //     });
 
             if(k == 0){
                 groups gr;
@@ -145,6 +179,8 @@ namespace kamaz {
                                 gr.p3 = p;
                                 group0[index_corresponding_value] = gr; 
                                 std::vector<Pixel> _item_list;
+                                int y_index = index_corresponding_value%img_width;
+                                detected_indics[y_index] = y_index;
                                 iter_neighbors(corresponding_value, _item_list);
                                 for(auto const &_object : item_list){
                                     applyBilateralFilter(filtered_image, _object.index, 3, 1.2, 1.2);
@@ -156,7 +192,7 @@ namespace kamaz {
                             }
                             indexes[1] = corresponding_value;
                             uf.union_f(indexes);
-                        }
+                    }
                 }
             }
             k+=1;
@@ -166,109 +202,6 @@ namespace kamaz {
     }
 
     void LocalMaximaFilter::persistence_and_save_data(const cv::Mat& img, cv::Mat& filtered_image, int indexi){
-        // int h = img.rows;
-        // int w = img.cols;
-        // img_width = w;
-        // uf.set_max_row(w);
-
-        // auto cmp = [](Pixel l, Pixel r) { return l.value < r.value;};
-        // std::priority_queue<Pixel, std::vector<Pixel>, decltype(cmp)> indices_queue(cmp);
-        // std::vector<Pixel> indices;
-        // for(int i=0; i<h; i++){
-        //     for(int j=0; j<w; j++){
-        //         cv::Scalar intensity = img.at<float>(i, j);
-        //         int index_val = w*i + j;
-        //         Pixel index_ = {index_val, intensity[0]};
-        //         indices_queue.push(index_);
-        //     }
-        // }
-
-        // while(!indices_queue.empty()) {
-        //     indices.push_back(indices_queue.top());
-        //     indices_queue.pop();
-        // }
-
-        // std::map<int, groups> group0;
-        // int k = 0;
-        // for (const auto& p : indices){
-        //     float v = p.value;
-        //     int index_p = p.index;
-        //     std::vector<std::tuple<float,Pixel>> nc;
-        //     std::vector<Pixel> item_list;
-        //     iter_neighbors(p, w, h, item_list, img);
-        //     auto cmp_pixel = [](Pixel lhs, Pixel rhs) 
-        //     { 
-        //         return lhs.value < rhs.value;
-        //     };
-        //     std::set<Pixel, decltype(cmp_pixel)> ni(cmp_pixel);
-        //     for(const Pixel& _object : item_list){
-        //         int index_object = _object.index;
-        //         if (uf.is_contains(index_object)){
-        //                 auto iy = uf.get_items(_object);
-        //                 ni.insert(iy);
-        //         }
-        //     }
-        //     auto cmp_ni = [](std::tuple<float, Pixel> l, std::tuple<float, Pixel> r) 
-        //     { return std::get<0>(l) > std::get<0>(r);};
-
-        //     std::priority_queue<std::tuple<float, Pixel>
-        //     , std::vector<std::tuple<float, Pixel>>, decltype(cmp_ni)> ni_queue(cmp_ni);
-
-        //     int couuu=0;
-        //     for(auto ancesttor : ni){
-        //         couuu++;
-        //         std::tuple<float, Pixel> __item(ancesttor.value, ancesttor);
-        //         ni_queue.push(__item); 
-        //     }
-        //     while(!ni_queue.empty()) {
-        //         nc.push_back(ni_queue.top());
-        //         ni_queue.pop();
-        //     }
-        //     if(k == 0){
-        //         groups gr;
-        //         gr.p1 = v;
-        //         gr.p2 = v;
-        //         gr.p3 = {0, 0.0};
-        //         group0[index_p]= gr;
-        //     }
-
-        //     uf.add(p, -k, index_p);    
-        //     if(nc.size() > 0){
-        //         std::vector<Pixel> indexes;
-        //         indexes.push_back(std::get<1>(nc[0]));
-        //         indexes.push_back(p);
-        //         uf.union_f(indexes);
-        //         for(std::size_t l=1; l<nc.size(); ++l){
-        //             auto bl = std::get<0>(nc[l]);
-        //             auto q = std::get<1>(nc[l]);
-        //             int index_q = q.index;
-        //             if (uf.is_contains(index_q)){
-        //                     auto corresponding_value = uf.get_items(q);
-        //                     int index_corresponding_value = corresponding_value.index;
-        //                     if(group0.find(index_corresponding_value) == group0.end()){
-        //                         groups gr;
-        //                         gr.p1 = bl;
-        //                         gr.p2 = bl-v;
-        //                         gr.p3 = p;
-        //                         group0[index_corresponding_value] = gr; 
-        //                         std::vector<Pixel> _item_list;
-        //                         iter_neighbors(corresponding_value, w, h, _item_list, img);
-        //                         for(auto const &_object : item_list){
-        //                             applyBilateralFilter(img, filtered_image, _object.index/w, _object.index%w, 3, h, w, 1.2, 1.2);
-        //                         }
-        //                         iter_neighbors(p, w, h, _item_list, img);
-        //                         for(const auto& _object : item_list){
-        //                             applyBilateralFilter(img, filtered_image, _object.index/w, _object.index%w, 3, h, w, 1.2, 1.2);
-        //                         }
-        //                     }
-        //                     indexes[1] = corresponding_value;
-        //                     uf.union_f(indexes);
-        //                 }
-        //         }
-        //     }
-        //     k+=1;
-        // }
-
         int h = img.rows;
         int w = img.cols;
         img_width = w;
@@ -284,22 +217,38 @@ namespace kamaz {
             }
         }
 
+        // std::vector<Pixel> indices;
+        // for(int i=0; i<h; i++){
+        //     for(int j=0; j<w; j++){
+        //         int index_val = w*i + j;
+        //         cv::Scalar intensity = depth_img_row_vector.at(index_val);
+        //         Pixel index_ = {index_val, intensity[0]};
+        //         indices.push_back(index_);
+        //     }
+        // }
+
+        // Get indices orderd by value from high to low
+        // __gnu_parallel::sort(indices.rbegin(), indices.rend(),
+        //  [&](const Pixel a, const Pixel b){
+        //      return a.value < b.value;
+        //  });
+
+        auto cmp = [](Pixel l, Pixel r) { return l.value < r.value;};
+        std::priority_queue<Pixel, std::vector<Pixel>, decltype(cmp)> indices_queue(cmp);
         std::vector<Pixel> indices;
         for(int i=0; i<h; i++){
             for(int j=0; j<w; j++){
+                cv::Scalar intensity = img.at<float>(i, j);
                 int index_val = w*i + j;
-                cv::Scalar intensity = depth_img_row_vector.at(index_val);
-                // cv::Scalar intensity = img.at<float>(i, j);
                 Pixel index_ = {index_val, intensity[0]};
-                indices.push_back(index_);
+                indices_queue.push(index_);
             }
         }
 
-        // // Get indices orderd by value from high to low
-        __gnu_parallel::sort(indices.rbegin(), indices.rend(),
-         [&](const Pixel a, const Pixel b){
-             return a.value < b.value; 
-         });
+        while(!indices_queue.empty()) {
+            indices.push_back(indices_queue.top());
+            indices_queue.pop();
+        }
 
         std::map<int, groups> group0;
         int k = 0;
@@ -322,17 +271,34 @@ namespace kamaz {
                 }
             }
 
+            // int couuu=0;
+            // for(auto ancesttor : ni){
+            //     couuu++;
+            //     std::tuple<float, Pixel> __item(ancesttor.value, ancesttor);
+            //     nc.push_back(__item);
+            // }
+
+            auto cmp_ni = [](std::tuple<float, Pixel> l, std::tuple<float, Pixel> r)
+            { return std::get<0>(l) > std::get<0>(r);};
+
+            std::priority_queue<std::tuple<float, Pixel>
+            , std::vector<std::tuple<float, Pixel>>, decltype(cmp_ni)> ni_queue(cmp_ni);
+
             int couuu=0;
             for(auto ancesttor : ni){
                 couuu++;
                 std::tuple<float, Pixel> __item(ancesttor.value, ancesttor);
-                nc.push_back(__item); 
+                ni_queue.push(__item);
+            }
+            while(!ni_queue.empty()) {
+                nc.push_back(ni_queue.top());
+                ni_queue.pop();
             }
 
-            __gnu_parallel::sort(nc.rbegin(), nc.rend(),
-                [](const std::tuple<float, Pixel> a, const std::tuple<float, Pixel> b){
-                    return std::get<0>(a) > std::get<0>(b); 
-            });
+            // __gnu_parallel::sort(nc.rbegin(), nc.rend(),
+            //     [](const std::tuple<float, Pixel> a, const std::tuple<float, Pixel> b){
+            //         return std::get<0>(a) > std::get<0>(b);
+            //     });
 
             if(k == 0){
                 groups gr;
@@ -377,10 +343,10 @@ namespace kamaz {
                 }
             }
             k+=1;
-        }   
+        }
+        std::cout<< "==============================" << group0.size() << std::endl;
 
         std::vector<std::tuple<int, int, float, float, float, int, int, float>> groupn;
-        std::cout<< "==============================" << group0.size() << std::endl;
         for (auto const k : group0){
             auto key = k.first;
             auto val = k.second;

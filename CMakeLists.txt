@@ -6,7 +6,7 @@ SET(CMAKE_C_FLAGS_DEBUG "-D_DEBUG")
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake_modules")
 set(CMAKE_MACOSX_RPATH 0)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -fPIC -fopenmp -DBOOST_LOG_DYN_LINK")
-set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O3")
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 set(Boost_USE_STATIC_LIBS OFF)
 
@@ -22,6 +22,7 @@ endif (Boost_NO_SYSTEM_PATHS)
 
 find_package(Boost COMPONENTS program_options log log_setup regex atomic
                             date_time system chrono filesystem thread graph REQUIRED)
+
 find_package(PCL)
 find_package(OpenCV REQUIRED)
 find_package(Threads REQUIRED)
@@ -58,8 +59,7 @@ add_executable(${PROJECT_NAME}_node nodes/hagen_node.cc
                                           nodes/ground_removal_filter_node.cc)
 
 target_compile_features(${PROJECT_NAME}_node PUBLIC cxx_std_11)
-target_link_libraries(${PROJECT_NAME}_node -Wl,--start-group  
-                                ${GROUND_REMOVAL_FILTER_LIB} -Wl,--end-group)
+target_link_libraries(${PROJECT_NAME}_node -Wl,--start-group  ${GROUND_REMOVAL_FILTER_LIB} -Wl,--end-group)
 
 install(
     DIRECTORY
