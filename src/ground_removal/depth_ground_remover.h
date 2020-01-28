@@ -106,12 +106,12 @@ public:
               selected_c = c;
         }
       }
-      if((selected_depth>0.001f) && (selected_depth<5)){
-        selected_depth_points.push_back(selected_r*depth_img_cols+selected_c);
-      }
+      // if((selected_depth>0.001f) && (selected_depth<5)){
+      //   selected_depth_points.push_back(selected_r*depth_img_cols+selected_c);
+      // }
     }
 
-    for(auto index : selected_depth_points){
+ ccc   for(auto index : selected_depth_points){
       auto current_coord = depth_points[index];
       labelOneComponent(1, current_coord, _label_image, threshold);
     }
@@ -129,11 +129,12 @@ public:
           for (auto const& index_of_point : point_list) {
               cloud_ptr_current_ptr->point_cloud_non_ground_plane->points.push_back(cloud_depth_mapper[index_of_point]);
           }
-        }else{
-          for (auto const& index_of_point : point_list) {
-              cloud_ptr_current_ptr->point_cloud_ground_plane->points.push_back(cloud_depth_mapper[index_of_point]);
-          }
         }
+        // else{
+        //   for (auto const& index_of_point : point_list) {
+        //       cloud_ptr_current_ptr->point_cloud_ground_plane->points.push_back(cloud_depth_mapper[index_of_point]);
+        //   }
+        // }
       }
     }
   }
