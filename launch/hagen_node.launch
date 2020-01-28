@@ -9,25 +9,24 @@
         <param name="frame_id" value="/world"/>
         <!-- <param name="point_cloud_topic_name" value="/velodyne_points" /> -->
         <param name="point_cloud_topic_name" value="/apollo/sensor/velodyne16/PointCloud2" />
-        <param name="logging_directory" value="/home/geesara/log" />
         <!-- <param name="image_topic_name" value="/pylon_camera_node_aca1300/image_raw/compressed" /> -->
         <!-- param name="point_cloud_topic_name" value="/apollo/sensor/velodyne16/PointCloud2"/ -->
         <param name="object_avoidance_zone" value="20.0"/>
         <param name="ground_remove_angle" value="10"/>
         <param name="number_point_clouds_to_be_merged" value="1"/>
         <param name="number_of_components" value="7"/>
+        <param name="avoid_smoothing", value="true">
     </node>
 
-    <node pkg="point_cloud_convertor" type="point_cloud_convertor" name="point_cloud_convertor" output="screen">
+    <!-- <node pkg="point_cloud_convertor" type="point_cloud_convertor" name="point_cloud_convertor" output="screen">
         <param name="child_frame_id" value="velo_link"/>
         <param name="frame_id" value="/world"/>
         <param name="point_cloud_topic_name" value="/apollo/sensor/velodyne16/PointCloud2" />
-        <!-- <param name="point_cloud_topic_name" value="/kitti/velo/pointcloud"/> -->
         <param name="object_avoidance_zone" value="20.0"/>
         <param name="ground_remove_angle" value="2"/>
         <param name="number_point_clouds_to_be_merged" value="1"/>
         <param name="number_of_components" value="7"/>
-    </node>
+    </node> -->
 
      <!-- <node pkg="depth_clustering" type="show_objects_node" name="show_objects_node" output="screen">
         <param name="child_frame_id" value="velo_link"/>
@@ -39,13 +38,13 @@
         <param name="number_of_components" value="7"/>
     </node> -->
 
-    <node pkg="points_preprocessor_usi" type="scanlinerun" name="scanlinerun" output="screen">
+    <!-- <node pkg="points_preprocessor_usi" type="scanlinerun" name="scanlinerun" output="screen">
             <param name="point_topic" value="/apollo/sensor/velodyne16/PointCloud2" />
     </node>
 
      <node pkg="points_preprocessor_usi" type="groundplanfit" name="groundplanfit" output="screen">
           <param name="point_topic" value="/apollo/sensor/velodyne16/PointCloud2" />
-    </node>
+    </node> -->
 
 
 </launch>

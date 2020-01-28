@@ -52,7 +52,7 @@ namespace hagen{
 
     };
 
-    void GroundRemovalFilterNode::init_logging(std::string logging_dir)
+    void GroundRemovalFilterNode::init_logging()
     {
         const std::string COMMON_FMT("[%TimeStamp%][%Severity%]:  %Message%");
         boost::log::register_simple_formatter_factory< boost::log::trivial::severity_level, char >("Severity");
@@ -66,14 +66,14 @@ namespace hagen{
 
         // Output message to file, rotates when file reached 1mb or at midnight every day. Each log file
         // is capped at 1mb and total is 20mb
-        boost::log::add_file_log (
-            boost::log::keywords::file_name = logging_dir + "/sample_%3N.log",
-            boost::log::keywords::rotation_size = 1 * 1024 * 1024,
-            boost::log::keywords::max_size = 20 * 1024 * 1024,
-            boost::log::keywords::time_based_rotation = boost::log::sinks::file::rotation_at_time_point(0, 0, 0),
-            boost::log::keywords::format = COMMON_FMT,
-            boost::log::keywords::auto_flush = true
-        );
+        // boost::log::add_file_log (
+        //     boost::log::keywords::file_name = logging_dir + "/sample_%3N.log",
+        //     boost::log::keywords::rotation_size = 1 * 1024 * 1024,
+        //     boost::log::keywords::max_size = 20 * 1024 * 1024,
+        //     boost::log::keywords::time_based_rotation = boost::log::sinks::file::rotation_at_time_point(0, 0, 0),
+        //     boost::log::keywords::format = COMMON_FMT,
+        //     boost::log::keywords::auto_flush = true
+        // );
 
         boost::log::add_common_attributes();
 
@@ -97,8 +97,8 @@ namespace hagen{
         nh_.param("number_of_components", hagen.lidar_process_subnode.number_of_components, hagen.lidar_process_subnode.number_of_components);
         nh_.param("image_topic_name", hagen.lidar_process_subnode.image_topic_name, hagen.lidar_process_subnode.image_topic_name);
         nh_.param("logging_directory", logging_dir, logging_dir);
-        
-        init_logging(logging_dir);
+        nh_.param("avoid_smoothing", hagen.lidar_process_subnode.avoid_smoothing, hagen.lidar_process_subnode.avoid_smoothing);
+        init_logging();
 
         ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
 

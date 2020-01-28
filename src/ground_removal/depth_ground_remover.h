@@ -42,6 +42,7 @@ public:
      int window_size;
      int kernel_size;
      double depth_expiration_time;
+     bool avoid_smoothing;
   };
 
   struct DepthCatcher {
@@ -69,10 +70,10 @@ public:
         // cv::imwrite(folder + std::to_string(counter) + "_processed.jpg", depth_img_pointer);
         // cv::imwrite(folder + std::to_string(counter) + "_depth_img.jpg", cloud_ptr_current_ptr->projection_ptr()->depth_image());
         CreateAngleImage();
-        // ApplySSASmoothing(options.window_size, options.bin_size, false);
-        // cv::imwrite(folder + std::to_string(counter) + "_angle_img.jpg", angle_img_pointer);
-        // ApplySSASmoothing(options.window_size, options.bin_size, false);
-        // cv::imwrite(folder + std::to_string(counter) + "_angle_smoothed_img.jpg", angle_img_pointer);
+        if(!options.avoid_smoothing){
+          ApplySSASmoothing(options.window_size, options.bin_size, false);
+          // cv::imwrite(folder + std::to_string(counter) + "_angle_smoothed_img.jpg", angle_img_pointer);
+        }
         ZeroOutGroundBFS<T>(options.ground_remove_angle, cloud_ptr_current_ptr, options.kernel_size);
   }
 
@@ -95,7 +96,6 @@ public:
         auto current_coord = Point(r, c, angle, depth);
         int index = depth_img_cols*r + c;
         depth_points[index] = current_coord;
-
         if(depth>0.001f && !depth_is_set){
             selected_depth_points.push_back(r*depth_img_cols+c);
             depth_is_set = true;
@@ -111,7 +111,7 @@ public:
       // }
     }
 
- ccc   for(auto index : selected_depth_points){
+    for(auto index : selected_depth_points){
       auto current_coord = depth_points[index];
       labelOneComponent(1, current_coord, _label_image, threshold);
     }

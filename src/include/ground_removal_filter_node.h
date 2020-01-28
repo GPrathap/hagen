@@ -61,7 +61,7 @@ namespace kamaz{
             ~GroundRemovalFilterNode();
             
             void init();
-            void init_logging(std::string logging_dir);
+            void init_logging();
             bool inited_ = false;
 
             ros::NodeHandle nh_;

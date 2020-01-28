@@ -67,6 +67,8 @@ class LidarProcessSubnode{
   ros::Publisher point_cloud_non_ground_plane_publisher;
   ros::Publisher point_cloud_;
 
+  bool avoid_smoothing = true;
+
  private: 
   bool init();
   
